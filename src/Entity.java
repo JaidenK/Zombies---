@@ -41,4 +41,7 @@ public class Entity {
 			img.draw();
 		glPopMatrix();
 	}
+	public int d6(){
+		return (int)(Math.random()*6+1);
+	}
 }
