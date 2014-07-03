@@ -1,0 +1,9 @@
+id:01image:tile01.pngtop:0right:1bottom:0left:1pp:1,0,2,0,2,0,0,0
+pp:2,1,2,0,3,5,1,0
+pp:3,2,2,0,0,0,2,0
+pp:4,0,1,0,5,0,0,1
+pp:5,1,1,2,6,0,4,1
+pp:6,2,1,0,0,0,5,1
+zombies:3
+life:3
+ammo:0name:Drug Store

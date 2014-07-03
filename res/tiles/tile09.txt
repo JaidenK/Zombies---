@@ -1,0 +1,7 @@
+id:09image:tile09.pngtop:0right:1bottom:0left:1
+pp:1,0,1,0,2,0,0,1
+pp:2,1,1,0,3,0,1,1
+pp:3,2,1,0,0,0,2,1
+zombies:2
+life:0
+ammo:0name: 
