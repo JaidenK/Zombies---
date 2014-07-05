@@ -96,7 +96,7 @@ public class Tile {
 			while(true){
 				int index = (int)(Math.random()*pp.size());
 				if(!pp.get(index).street&&pp.get(index).ammo==null&&pp.get(index).life==null){
-					pp.get(index).ammo = new Ammo();
+					pp.get(index).ammo = new Ammo(true);
 					break;
 				}
 				n++;
@@ -114,7 +114,7 @@ public class Tile {
 			while(true){
 				int index = (int)(Math.random()*pp.size());
 				if(!pp.get(index).street&&pp.get(index).ammo==null&&pp.get(index).life==null){
-					pp.get(index).life = new Life();
+					pp.get(index).life = new Life(true);
 					break;
 				}
 				n++;
@@ -257,7 +257,7 @@ public class Tile {
 			bottom = false;
 			t.top = false;
 			for(PlopPoint x: pp){
-				if(x.pos.equals(new IntCoord(1,1)))
+				if(x.pos.equals(new IntCoord(1,0)))
 					p0 = x;
 			}
 			for(PlopPoint x: t.pp){

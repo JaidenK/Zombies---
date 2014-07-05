@@ -155,7 +155,7 @@ public class Zombies extends ApplicationWindow {
 	public void createMenu(){
 		footerMenu = new Menu();
 		footerMenu.setColor(Color.BLACK);
-		footerMenu.setDimensions(new Coord(windowDimensions.getX(),40));
+		footerMenu.setDimensions(new Coord(windowDimensions.getX(),50));
 		footerMenu.setVisible(true);
 		
 		tileLabel = new Label("Awaiting input.",new Coord(1,2));
@@ -164,7 +164,7 @@ public class Zombies extends ApplicationWindow {
 		tileLabel.setVisible(true);
 		
 		moveLabel = new Label("Awaiting input.",new Coord(1,2));
-		moveLabel.setDimensions(new Coord(1,20));
+		moveLabel.setDimensions(new Coord(1,30));
 		moveLabel.setSize(Size.MATCH_PARENT_WIDTH);
 		moveLabel.setVisible(true);
 		
@@ -204,6 +204,9 @@ public class Zombies extends ApplicationWindow {
 		case 3:
 			break;
 		case 4:
+			if(players.get(currentPlayer).pp.zed!=null){
+				players.get(currentPlayer).combat();
+			}
 			break;
 		case 5:
 			break;
@@ -321,7 +324,7 @@ public class Zombies extends ApplicationWindow {
 	
 	public void drawFooter(){
 		glPushMatrix();
-			glTranslated(0,windowDimensions.getY()/2-20,0);
+			glTranslated(0,windowDimensions.getY()/2-30,0);
 			footerMenu.draw();
 		glPopMatrix();
 	}

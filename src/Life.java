@@ -1,8 +1,8 @@
-import king.jaiden.util.Image;
+import king.jaiden.util.*;
 
 
 public class Life extends Entity{
-	public Life(){
-		super("res/images/heart.png");
+	public Life(boolean x){
+		super("res/images/heart.png",x);
 	}
 }

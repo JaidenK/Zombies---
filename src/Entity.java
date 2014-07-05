@@ -10,11 +10,16 @@ public class Entity {
 	double rot;
 	int ticksTilTilt = 0;
 	boolean tilting = true;
-	public Entity(String file){
+	public Entity(String file, boolean x){
 		img = new Image(file);
 		img.setDimensions(new Coord(42,42));
-		rot = Math.random() * 90 - 45;
-		offset = new Coord((Math.random()-0.5)*40,(Math.random()-0.5)*40);
+		if(x){
+			rot = Math.random() * 90 - 45;
+			offset = new Coord((Math.random()-0.5)*40,(Math.random()-0.5)*40);
+		}else{
+			rot = 0;
+			offset = new Coord();
+		}
 	}
 	public void tick(){
 		if(tilting){

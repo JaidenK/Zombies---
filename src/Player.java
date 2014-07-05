@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
 import king.jaiden.util.*;
+import static org.lwjgl.opengl.GL11.*;
 
 
 public class Player extends Entity{
-	int life;
-	int ammo;
+	ArrayList<Ammo> ammo;
 	ArrayList<Card> cards;
 	Color color;
 	Zombies game;
@@ -15,16 +15,15 @@ public class Player extends Entity{
 	boolean combating = false;
 	int spendBulletLoseLife = 0;
 	int roll = 0;
+	ArrayList<Life> lives;
+	PlopPoint ts;
 	public Player(Zombies game,PlopPoint pp){
-		super("res/images/player.png");
+		super("res/images/player.png",true);
 		img.setDimensions(new Coord(65,65));
 		this.game = game;
-		this.pp = pp;
-		cards = new ArrayList<Card>();
-		zeds = new ArrayList<Zombie>();
+		ts = pp;
 		setColor();
-		life = 3;
-		ammo = 3;
+		init();
 	}
 	public void setColor(){
 		int i = 0;
@@ -75,6 +74,28 @@ public class Player extends Entity{
 		DrawUtil.setColor(color);
 		super.draw();
 		DrawUtil.setColor(Color.WHITE);
+		glPushMatrix();
+			glLoadIdentity();
+			glTranslated(game.getWindowDimensions().getX()/2-40,-game.getWindowDimensions().getY()/2+40,0);
+			glPushMatrix();
+				if(lives.size()>0){
+					for(int i = 0; i < lives.size(); i++){
+						lives.get(i).draw();
+						glTranslated(-lives.get(i).img.getDimensions().getX()-10,0,0);
+					}
+				}
+			glPopMatrix();
+			glTranslated(0,100,0);
+			glPushMatrix();
+			if(ammo.size()>0){
+				for(int i = 0; i < ammo.size(); i++){
+					ammo.get(i).draw();
+					glTranslated(-ammo.get(i).img.getDimensions().getX()-10,0,0);
+				}
+			}
+		glPopMatrix();
+			
+		glPopMatrix();
 	}
 	public void combat() {
 		Zombie z = pp.zed;
@@ -82,7 +103,7 @@ public class Player extends Entity{
 			combating = true;
 			roll = d6();
 			System.out.println(roll+" CMOBAT ROLL");
-			System.out.println(life+" lives");
+			System.out.println(lives.size()+" lives");
 			System.out.println(ammo+" bullets");
 			game.moveLabel.setLabel("Combat Roll: "+roll);
 			if(roll<4){
@@ -100,25 +121,58 @@ public class Player extends Entity{
 	}
 	
 	public void ammoOrLife(){
-		game.moveLabel.setLabel("You failed to kill the zombie with a roll of "+roll+".  Add bullets or lose a heart? "+ammo+" bullets remaining. "+life+" hearts remaining.");
+		game.moveLabel.setLabel("You failed to kill the zombie with a roll of "+roll+".  Add bullets or lose a heart?");
 		int requiredBullets = 4-roll;
-		if(ammo<requiredBullets){
-			life -= 1;
-			combating = false;
-			combat();
+		if(ammo.size()<requiredBullets){
+			if(loseLife()){
+				combat();
+			}
 		}else if(spendBulletLoseLife!=0){
 			if(spendBulletLoseLife<0){//spend
-				ammo -= requiredBullets;
+				for(int i = 0; i < requiredBullets; i++){
+					ammo.remove(0);
+				}
 				zeds.add(pp.zed);
 				pp.zed = null;
 				combating = false;
-			}else{//lose
-				life -= 1;
-				combating = false;
-				combat();
+			}else{
+				if(loseLife()){
+					combat();
+				}
 			}
 			spendBulletLoseLife = 0;
 		}
+	}
+	
+	public boolean loseLife(){
+		combating = false;
+		if(lives.size()>1){
+			lives.remove(0);
+			return true;
+		}else{
+			die();
+			return false;
+		}
+	}
+	
+	public void init(){
+		pp = ts;
+		cards = new ArrayList<Card>();
+		zeds = new ArrayList<Zombie>();
+		lives = new ArrayList<Life>();
+		lives.add(new Life(false));
+		lives.add(new Life(false));
+		lives.add(new Life(false));
+		ammo = new ArrayList<Ammo>();
+		ammo.add(new Ammo(false));
+		ammo.add(new Ammo(false));
+		ammo.add(new Ammo(false));
+	}
+	
+	public void die(){
+		pp.players.remove(this);
+		init();
+		pp.players.add(this);
 	}
 	
 	public void pickUpCards() {
@@ -131,6 +185,9 @@ public class Player extends Entity{
 	}
 	
 	public boolean moveUp() {
+		if(combating){
+			return false;
+		}
 		if(pp.top!=null){
 			movement--;
 			PlopPoint old = pp;
@@ -146,6 +203,9 @@ public class Player extends Entity{
 		return false;
 	}
 	public boolean moveDown() {
+		if(combating){
+			return false;
+		}
 		if(pp.bottom!=null){
 			movement--;
 			PlopPoint old = pp;
@@ -161,6 +221,9 @@ public class Player extends Entity{
 		return false;
 	}
 	public boolean moveRight() {
+		if(combating){
+			return false;
+		}
 		if(pp.right!=null){
 			movement--;
 			PlopPoint old = pp;
@@ -176,6 +239,9 @@ public class Player extends Entity{
 		return false;
 	}
 	public boolean moveLeft() {
+		if(combating){
+			return false;
+		}
 		if(pp.left!=null){
 			movement--;
 			PlopPoint old = pp;
